@@ -16,7 +16,10 @@ This project investigates the relationship between human-perceived motion blur a
 ├── metrics.py                 # Helper functions for metrics
 ├── image_ratings.xlsx         # Human rater annotations
 ├── ofiqlabels.csv             # OFIQ scores with blur label mapping
+├── failure_cases.csv          # Images with OFIQ–human label mismatches
 ├── figures/                   # Output plots (EDC, ROC, DET, heatmaps)
+├── sample1/                   # Image samples excluded (see NDA note)
+├── sample2/                   # Image samples excluded (see NDA note)
 ```
 
 ---
