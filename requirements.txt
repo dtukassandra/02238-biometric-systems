@@ -1,0 +1,8 @@
+pandas>=1.3
+numpy>=1.21
+matplotlib>=3.5
+seaborn>=0.11
+scikit-learn>=1.0
+statsmodels>=0.13
+openpyxl>=3.0
+Pillow>=8.0
