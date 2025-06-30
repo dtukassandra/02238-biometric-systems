@@ -71,7 +71,7 @@ def compute_correlations(df):
 def plot_confusion(df, save_as="figures/confusion_matrix.png"):
     cm = confusion_matrix(df['mean_human'], df['OFIQ Sharpness Label'])
     plt.figure(figsize=(6, 5))
-    sns.heatmap(cm, annot=True, fmt="d", cmap="Blues", xticklabels=[0, 1, 2], yticklabels=[0, 1, 2])
+    sns.heatmap(cm, annot=True, fmt="d", cmap="Blues", xticklabels=[0, 1], yticklabels=[0, 1])
     plt.xlabel("OFIQ predicted label")
     plt.ylabel("Human mean label")
     plt.title("Confusion matrix")
@@ -81,7 +81,7 @@ def plot_confusion(df, save_as="figures/confusion_matrix.png"):
 
 
 def classification_report_df(y_true, y_pred):
-    report = classification_report(y_true, y_pred, output_dict=True)
+    report = classification_report(y_true, y_pred, output_dict=True, labels=[0, 1], zero_division=0)
     return pd.DataFrame(report).transpose().round(2)
 
 
@@ -118,7 +118,7 @@ def plot_edc_curve(df, method="human", save_as="figures/edc_curve.png"):
 
 
 def plot_roc_and_det(df, save_roc="figures/roc_ofiq_blur.png", save_det="figures/det_ofiq_blur.png"):
-    df['binary_human'] = (df['mean_human'] == 2).astype(int)
+    df['binary_human'] = (df['mean_human'] == 1).astype(int)
     fpr, tpr, _ = roc_curve(df['binary_human'], 1 - df['OFIQ Sharpness'])
     roc_auc = auc(fpr, tpr)
 
@@ -133,7 +133,20 @@ def plot_roc_and_det(df, save_roc="figures/roc_ofiq_blur.png", save_det="figures
     plt.savefig(save_roc, dpi=300)
     plt.close()
 
-    fnr, fpr_det, _ = det_curve(df['binary_human'], 1 - df['OFIQ Sharpness'])
+    if df['binary_human'].sum() > 0 and df['binary_human'].sum() < len(df):
+        fnr, fpr_det, _ = det_curve(df['binary_human'], 1 - df['OFIQ Sharpness'])
+        plt.figure(figsize=(6, 5))
+        plt.plot(fpr_det, fnr, label="DET Curve")
+        plt.xlabel("False match rate (FMR)")
+        plt.ylabel("False non-match rate (FNMR)")
+        plt.title("DET curve: Blur detection with OFIQ")
+        plt.grid(True)
+        plt.tight_layout()
+        plt.savefig(save_det, dpi=300)
+        plt.close()
+    else:
+        print("⚠️ Cannot plot DET curve: Only one class present.")
+
     plt.figure(figsize=(6, 5))
     plt.plot(fpr_det, fnr, label="DET Curve")
     plt.xlabel("False match rate (FMR)")

@@ -46,6 +46,7 @@ metrics.ensure_figures_folder()
 human_labels = pd.read_excel("image_ratings.xlsx")
 human_labels.columns = ["Image Name", "Folder", "rater1", "rater2", "rater3"]
 human_labels["mean_human"] = human_labels[["rater1", "rater2", "rater3"]].mean(axis=1).round().astype(int)
+human_labels["mean_human"] = human_labels["mean_human"].replace(2, 1)
 
 # Load OFIQ scores
 ofiq = pd.read_csv("ofiqlabels.csv", delimiter=";")

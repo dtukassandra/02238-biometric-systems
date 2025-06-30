@@ -56,5 +56,8 @@ ofiq.shutdown()
 
 # ========== Save results ==========
 df = pd.DataFrame(results)
+# Binarize OFIQ scores: 0 = clear, 1 = blurred
+df["OFIQ Sharpness Label"] = (df["OFIQ Sharpness"] < 30).astype(int)
+
 df.to_csv(output_file, index=False)
 print(f"Done. Results saved to: {output_file}")
